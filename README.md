@@ -1,4 +1,4 @@
-# Forr-passos-condutor
+# Forró Passos Condutor
 
 Aplicação para cadastrar passos de forró e gerar sequências aleatórias válidas sem repetição, respeitando perna livre inicial.
 
@@ -31,21 +31,19 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-3. Configure a conexão:
+3. Exporte a variável `DATABASE_URL` (ou use o valor padrão abaixo, que também está em `.env.example`):
 
 ```bash
-cp .env.example .env
+export DATABASE_URL=postgresql+psycopg://postgres:postgres@localhost:5432/forro
 ```
 
-4. Exporte a variável `DATABASE_URL` (ou use o valor padrão do `.env.example`).
-
-5. Execute migrations:
+4. Execute migrations:
 
 ```bash
 alembic upgrade head
 ```
 
-6. Suba a aplicação:
+5. Suba a aplicação:
 
 ```bash
 uvicorn app.main:app --reload
