@@ -24,8 +24,22 @@ body {
 .tab {
   border: 1px solid #d1d5db;
   background: #fff;
+  color: #1f2937;
   padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  font-weight: 600;
   cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.tab:hover {
+  background: #f3f4f6;
+  border-color: #9ca3af;
+}
+
+.tab:focus-visible {
+  outline: 2px solid #93c5fd;
+  outline-offset: 2px;
 }
 
 .tab.active {
