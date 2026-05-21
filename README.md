@@ -61,13 +61,26 @@ Acesse: `http://localhost:8000`
 
 ## Endpoints
 
-- `POST /api/steps` cria passo
-- `GET /api/steps` lista passos
+- `POST /api/steps` cria passo simples ou composto
+- `GET /api/steps` lista passos (incluindo composição quando existir)
 - `POST /api/randomize` gera sequências aleatórias sem repetição e sobras
+
+### Passos compostos
+
+- Um passo pode ser simples (`is_composite=false`) ou composto (`is_composite=true`).
+- Passo composto deve informar `component_step_ids` com pelo menos 2 passos já existentes, em ordem.
+- A ordem da composição é persistida na tabela relacional `step_components`.
+- O campo `starts_with_left_free` do passo composto é derivado automaticamente do primeiro componente da sequência.
+- O backend valida:
+  - existência de todos os componentes;
+  - mínimo de 2 componentes;
+  - que um passo composto não referencie a si mesmo diretamente.
+- Na listagem, cada passo composto retorna `components` na ordem cadastrada.
 
 ## Regras de randomização implementadas
 
 - Cada passo possui `name` e `starts_with_left_free`.
+- Passos compostos participam normalmente da randomização, usando `starts_with_left_free` final derivado.
 - Todo passo termina com a perna oposta livre.
 - As sequências são geradas em pares de 2 passos.
 - O segundo passo do par sempre começa com a perna oposta ao primeiro.
