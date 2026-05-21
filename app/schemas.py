@@ -4,6 +4,7 @@ from pydantic import BaseModel, ConfigDict, Field, field_validator, model_valida
 class StepBase(BaseModel):
     name: str
     starts_with_left_free: bool | None = None
+    ends_with_left_free: bool | None = None
     is_composite: bool = False
     component_step_ids: list[int] = Field(default_factory=list)
 
@@ -29,6 +30,10 @@ class StepCreate(StepBase):
                 raise ValueError(
                     "Passo simples precisa informar se começa com a esquerda livre"
                 )
+            if self.ends_with_left_free is None:
+                raise ValueError(
+                    "Passo simples precisa informar se termina com a esquerda livre"
+                )
             if self.component_step_ids:
                 raise ValueError("Passo simples não pode ter componentes")
         return self
@@ -38,6 +43,7 @@ class StepComponentRead(BaseModel):
     step_id: int
     name: str
     starts_with_left_free: bool
+    ends_with_left_free: bool
     position: int
 
 
@@ -45,6 +51,7 @@ class StepRead(BaseModel):
     id: int
     name: str
     starts_with_left_free: bool
+    ends_with_left_free: bool
     is_composite: bool
     components: list[StepComponentRead] = Field(default_factory=list)
 

@@ -18,6 +18,7 @@ class Step(Base):
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String(100), nullable=False, unique=True, index=True)
     starts_with_left_free = Column(Boolean, nullable=False)
+    ends_with_left_free = Column(Boolean, nullable=False)
     is_composite = Column(Boolean, nullable=False, default=False)
 
     components = relationship(

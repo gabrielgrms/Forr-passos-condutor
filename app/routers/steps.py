@@ -15,6 +15,7 @@ def _serialize_step(step: Step) -> StepRead:
             step_id=item.component_step.id,
             name=item.component_step.name,
             starts_with_left_free=item.component_step.starts_with_left_free,
+            ends_with_left_free=item.component_step.ends_with_left_free,
             position=item.position,
         )
         for item in sorted(step.components, key=lambda component: component.position)
@@ -23,6 +24,7 @@ def _serialize_step(step: Step) -> StepRead:
         id=step.id,
         name=step.name,
         starts_with_left_free=step.starts_with_left_free,
+        ends_with_left_free=step.ends_with_left_free,
         is_composite=step.is_composite,
         components=components,
     )
@@ -31,6 +33,7 @@ def _serialize_step(step: Step) -> StepRead:
 @router.post("", response_model=StepRead, status_code=status.HTTP_201_CREATED)
 def create_step(step: StepCreate, db: Session = Depends(get_db)):
     starts_with_left_free = step.starts_with_left_free
+    ends_with_left_free = step.ends_with_left_free
     component_steps_by_id: dict[int, Step] = {}
 
     if step.is_composite:
@@ -44,10 +47,14 @@ def create_step(step: StepCreate, db: Session = Depends(get_db)):
         starts_with_left_free = component_steps_by_id[
             step.component_step_ids[0]
         ].starts_with_left_free
+        ends_with_left_free = component_steps_by_id[
+            step.component_step_ids[-1]
+        ].ends_with_left_free
 
     db_step = Step(
         name=step.name,
         starts_with_left_free=starts_with_left_free,
+        ends_with_left_free=ends_with_left_free,
         is_composite=step.is_composite,
     )
     db.add(db_step)
