@@ -3,6 +3,7 @@ const tabContents = document.querySelectorAll('.tab-content');
 const stepForm = document.querySelector('#step-form');
 const stepNameInput = document.querySelector('#step-name');
 const startsLeftInput = document.querySelector('#starts-left');
+const endsLeftInput = document.querySelector('#ends-left');
 const isCompositeInput = document.querySelector('#is-composite');
 const componentsBuilder = document.querySelector('#components-builder');
 const componentStepSelect = document.querySelector('#component-step-select');
@@ -21,6 +22,11 @@ let selectedComponentIds = [];
 const notify = (message) => {
   window.alert(message);
 };
+
+const legLabel = (isLeftFree) => (isLeftFree ? 'esquerda livre' : 'direita livre');
+
+const stepLegSummary = (step) =>
+  `começa: ${legLabel(step.starts_with_left_free)} / termina: ${legLabel(step.ends_with_left_free)}`;
 
 const renderList = (element, items, emptyMessage) => {
   element.innerHTML = '';
@@ -43,13 +49,17 @@ const fetchSteps = async () => {
 
   const all = cachedSteps.map((step) => {
     if (!step.is_composite) {
-      return `${step.name} (${step.starts_with_left_free ? 'esquerda livre' : 'direita livre'})`;
+      return `${step.name} (${stepLegSummary(step)})`;
     }
     const decomposition = step.components.map((component) => component.name).join(' -> ');
-    return `${step.name} [composto: ${decomposition}] (${step.starts_with_left_free ? 'esquerda livre' : 'direita livre'})`;
+    return `${step.name} [composto: ${decomposition}] (${stepLegSummary(step)})`;
   });
-  const left = cachedSteps.filter((step) => step.starts_with_left_free).map((step) => step.name);
-  const right = cachedSteps.filter((step) => !step.starts_with_left_free).map((step) => step.name);
+  const left = cachedSteps
+    .filter((step) => step.starts_with_left_free)
+    .map((step) => `${step.name} (${stepLegSummary(step)})`);
+  const right = cachedSteps
+    .filter((step) => !step.starts_with_left_free)
+    .map((step) => `${step.name} (${stepLegSummary(step)})`);
 
   renderList(stepsList, all, 'Nenhum passo cadastrado');
   renderList(leftList, left, 'Nenhum passo com esquerda livre');
@@ -62,7 +72,7 @@ const renderComponentOptions = () => {
   cachedSteps.forEach((step) => {
     const option = document.createElement('option');
     option.value = step.id;
-    option.textContent = `${step.name} (${step.starts_with_left_free ? 'esquerda livre' : 'direita livre'})`;
+    option.textContent = `${step.name} (${stepLegSummary(step)})`;
     componentStepSelect.appendChild(option);
   });
 };
@@ -127,6 +137,7 @@ const toggleCompositeMode = () => {
   const isComposite = isCompositeInput.checked;
   componentsBuilder.classList.toggle('hidden', !isComposite);
   startsLeftInput.disabled = isComposite;
+  endsLeftInput.disabled = isComposite;
 };
 
 const addComponent = () => {
@@ -154,6 +165,7 @@ const createStep = async (event) => {
   const payload = {
     name: stepNameInput.value,
     starts_with_left_free: isComposite ? null : startsLeftInput.checked,
+    ends_with_left_free: isComposite ? null : endsLeftInput.checked,
     is_composite: isComposite,
     component_step_ids: isComposite ? selectedComponentIds : [],
   };
@@ -184,7 +196,7 @@ const generateSequences = async () => {
   const data = await response.json();
 
   const pairs = data.pairs.map((pair, index) => `${index + 1}. ${pair.first.name} -> ${pair.second.name}`);
-  const leftovers = data.leftovers.map((step) => `${step.name} (${step.starts_with_left_free ? 'esquerda livre' : 'direita livre'})`);
+  const leftovers = data.leftovers.map((step) => `${step.name} (${stepLegSummary(step)})`);
 
   renderList(pairsList, pairs, 'Nenhuma sequência possível');
   renderList(leftoversList, leftovers, 'Sem sobras');

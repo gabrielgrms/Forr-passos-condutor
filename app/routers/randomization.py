@@ -17,6 +17,7 @@ def randomize_steps(db: Session = Depends(get_db)):
             id=step.id,
             name=step.name,
             starts_with_left_free=step.starts_with_left_free,
+            ends_with_left_free=step.ends_with_left_free,
             is_composite=step.is_composite,
             components=[],
         )

@@ -70,7 +70,7 @@ Acesse: `http://localhost:8000`
 - Um passo pode ser simples (`is_composite=false`) ou composto (`is_composite=true`).
 - Passo composto deve informar `component_step_ids` com pelo menos 2 passos já existentes, em ordem.
 - A ordem da composição é persistida na tabela relacional `step_components`.
-- O campo `starts_with_left_free` do passo composto é derivado automaticamente do primeiro componente da sequência.
+- Os campos `starts_with_left_free` e `ends_with_left_free` do passo composto são derivados automaticamente do primeiro e do último componente da sequência.
 - O backend valida:
   - existência de todos os componentes;
   - mínimo de 2 componentes;
@@ -79,11 +79,10 @@ Acesse: `http://localhost:8000`
 
 ## Regras de randomização implementadas
 
-- Cada passo possui `name` e `starts_with_left_free`.
-- Passos compostos participam normalmente da randomização, usando `starts_with_left_free` final derivado.
-- Todo passo termina com a perna oposta livre.
+- Cada passo possui `name`, `starts_with_left_free` e `ends_with_left_free`.
+- Passos compostos participam normalmente da randomização, usando início/fim derivados dos componentes.
 - As sequências são geradas em pares de 2 passos.
-- O segundo passo do par sempre começa com a perna oposta ao primeiro.
+- O segundo passo do par sempre começa com a mesma perna que ficou livre ao final do primeiro.
 - Um passo não é reutilizado na mesma randomização.
-- O algoritmo consome passos até acabar um dos grupos.
+- O algoritmo monta pares válidos aleatórios sem reutilizar passos.
 - Passos sem par são retornados em `leftovers`.
