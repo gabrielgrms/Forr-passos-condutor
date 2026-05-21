@@ -50,10 +50,29 @@ body {
   margin-bottom: 1rem;
 }
 
+.card.nested {
+  margin: 0.5rem 0;
+}
+
+.hidden {
+  display: none;
+}
+
 .columns {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   gap: 1rem;
+}
+
+.component-controls {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+select {
+  flex: 1;
+  padding: 0.5rem;
 }
 
 label {
@@ -86,4 +105,16 @@ button {
 .list {
   margin: 0;
   padding-left: 1rem;
+}
+
+.component-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.component-actions {
+  display: flex;
+  gap: 0.25rem;
 }

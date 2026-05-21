@@ -28,6 +28,21 @@
             Começa com a perna esquerda livre
           </label>
 
+          <label class="checkbox-label">
+            <input id="is-composite" type="checkbox" />
+            Passo composto
+          </label>
+
+          <div id="components-builder" class="card nested hidden">
+            <h3>Composição do passo</h3>
+            <p>Selecione pelo menos 2 passos na ordem desejada.</p>
+            <div class="component-controls">
+              <select id="component-step-select"></select>
+              <button id="add-component-btn" type="button">Adicionar componente</button>
+            </div>
+            <ul id="selected-components-list" class="list"></ul>
+          </div>
+
           <button type="submit">Salvar passo</button>
         </form>
 

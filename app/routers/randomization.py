@@ -12,5 +12,14 @@ router = APIRouter(prefix="/api/randomize", tags=["randomization"])
 @router.post("", response_model=RandomizationResponse)
 def randomize_steps(db: Session = Depends(get_db)):
     db_steps = db.query(Step).all()
-    step_reads = [StepRead.model_validate(step) for step in db_steps]
+    step_reads = [
+        StepRead(
+            id=step.id,
+            name=step.name,
+            starts_with_left_free=step.starts_with_left_free,
+            is_composite=step.is_composite,
+            components=[],
+        )
+        for step in db_steps
+    ]
     return generate_sequences(step_reads)
