@@ -22,6 +22,7 @@ def upgrade() -> None:
     with op.batch_alter_table("steps") as batch_op:
         batch_op.add_column(sa.Column("ends_with_left_free", sa.Boolean(), nullable=True))
 
+    # Existing rows only supported the old rule "ends with the opposite free leg".
     op.execute(
         sa.text("UPDATE steps SET ends_with_left_free = NOT starts_with_left_free")
     )
